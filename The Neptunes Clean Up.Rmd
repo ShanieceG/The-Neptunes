@@ -1,0 +1,41 @@
+---
+title: "The Neptunes Clean UP"
+author: "Shaniece Gooden"
+date: "2023-05-25"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+I did a little more digging (Google searches) and found that some of the titles in the initial list of songs produced by Pharrell Williams contained songs where he was actually a writer and not a producer. This mistake could be made given that Pharrell and The Neptunes are usally co-producers and co-writers on songs rather than just one or the other. Thus I separated out the songs that were on the Billboard Hot 100 list and researched to ensure all the songs were actually produced by The Neptunes or Pharrell Williams. 
+```{r}
+library(tidyverse)
+library(janitor)
+
+#Pull out rows where song is on Billboard Hot 100
+bill_y_nep <- The_Neptunes_N_E_R_D |>
+  clean_names() |>
+  filter(billboard_hot_100_single=="Y")
+bill_y_nep
+```
+All the songs on the Billboard Hot 100 for The Neptunes were in fact produced by The Neptunes.
+
+```{r}
+bill_y_pw <- Pharrell_Williams |>
+  clean_names() |>
+  filter(billboard_top_100 == "Y")
+bill_y_pw
+```
+
+There were 7 songs that Pharrell Williams did not actually produce but was a co-writer.The following songs need to be removed:
+"Rump Shaker"
+"Hella Good"
+"Get Lucky"
+"Heatstroke"
+"Havana"
+"Skeletons"
+"Buss It"
+

@@ -1,0 +1,65 @@
+---
+title: "The Neptunes Billboard Hot 100"
+author: "Shaniece Gooden"
+date: "2023-05-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+The Neptunes is a songwriting and production duo comprised of Pharrell Williams and Chad Hugo. They later formed the band N.E.R.D.(No one Every Real Dies) with Shay Haley in 1999. I've been fans of both The Neptunes and N.E.R.D since 1999. I've also enjoyed many of Pharrell Williams solo works and songs he has produced for other artists. I was interested in looking into how many of their works, both solo and as The Neptunes, had made the Billboard Hot 100 and how long they were on the chart. 
+
+To find the songs produced by Pharrell Williams and The Neptunes I used Wikipedia. To determine how long the song was on the Billboard Hot 100 Chart I used the following website www.billboard.elpee.jp
+
+```{r}
+library(tidyverse)
+library(lubridate)
+#install.packages("janitor")
+library("janitor")
+
+#Add column that will count number of songs that made Billboard Top 100
+data_nep <- The_Neptunes_N_E_R_D |>
+  clean_names() |>
+  mutate(count = case_when(billboard_hot_100_single == "Y" ~ 1,
+                            billboard_hot_100_single == "N" ~ 0)) |>
+  
+  #Group by year and plot total number of songs that made Billboard Top 100 for each year
+  group_by(year) |>
+  select(count)|>
+  ggplot(aes(x=year, y=count)) +
+  geom_col() +
+  scale_x_binned(n.breaks=26) +
+  coord_flip() +
+  labs(x="Year", y="Number of Songs on Billboard Hot 100", title= "The Neptunes Production Singles on Billboard Hot 100 Chart per Year")
+
+#Print graph
+data_nep
+
+```
+
+```{r}
+#Correct data point in row 18 that was "2" instead of "N"
+Pharrell_Williams [18,4]='N'
+
+#Removed rows containing songs that weren't actually produced by Pharrell Williams
+data_p <- Pharrell_Williams[-c(1, 10, 89, 196, 205, 217, 250), ] |>
+
+  #Add column that will count number of songs that made Billboard Top 100
+  clean_names() |>
+  mutate(count = case_when(billboard_top_100 == "Y" ~ 1,
+                            billboard_top_100 == "N" ~ 0)) |>
+  
+#Group by year and plot total number of songs that made Billboard Top 100 for each year
+  group_by(year) |>
+  select(count)|>
+  ggplot(aes(x=year, y=count)) +
+  geom_col() +
+ scale_x_binned(n.breaks=24) +
+  coord_flip() +
+  labs(x="Year", y="Number of Songs on Billboard Hot 100", title= "Pharrell Williams Production Singles on Billboard Hot 100 per Year")
+
+#Print graph
+data_p
+```
+The duo The Neptunes had the highest number of their productions on the Billboard Hot 100 in 2002 towards the beginning of their production career. There were 16 songs that they produced that made the Billboard Hot 100. On the other hand Pharrell Williams had the most songs he produced make the Billboard Hot 100 in 2018, with 4 songs making the list.
